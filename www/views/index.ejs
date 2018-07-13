@@ -7,22 +7,25 @@
 	<script src='http://code.jquery.com/jquery-latest.js'></script>	 
 	<script type="text/javascript">
 	 
+	  setInterval(getPrice ,1000);  
+
 	  function getPrice(){
 	 	 $.ajax({
               url: '/users',
               dataType: 'json',
               type: 'GET', 
               contentType: 'application/json; charset=utf-8',
-              success: function(result) { 
+              success: function(result) {  
 
                    var upbit = '';
                    var str ='<table class="blueTable">';
                    str += '<thead>'; 
                    str += '<tr>';
                    str += '<th>코인명</th>';
-				   str += '<th>KRW</th>';
-				   str += '<th>USDT->KRW가격</th>';
-				   str += '<th>USDT</th>'; 
+				   str += '<th>판매 최저가 KRW</th>';
+				   str += '<th>판매 최저가 총액</th>'; 
+				   str += '<th>구매 최고가 비트</th>'; 
+				   str += '<th>구매 최고가 총액</th>'; 
 				   str += '<th>프리미엄</th>';
 		           str += '</tr>'; 
 		           str += '</thead>'; 
@@ -32,20 +35,49 @@
                   	var td ='';                  	 
               	    td = '<tr>';  
               	    td += '<td>' +(k, result.coins[k].symbol) + '</td>';
-              	    td += '<td>' +setComma((k, result.coins[k].price_krw)) + ' 원</td>';
-              	    td += '<td>' +setComma((k, result.coins[k].price_krw_usd)) + ' 원</td>';
-              	    td += '<td>' +setComma((k, result.coins[k].price_usd)) + ' 달라</td>';  
+              	    td += '<td>' +setComma((k, result.coins[k].price_ask_krw)) + ' 원</td>';
+              	    td += '<td>' +setComma((k, result.coins[k].price_ask_krw_total )) + ' 원</td>';  
+              	    td += '<td>' +setComma((k, result.coins[k].price_bid_btc)) +' / '+ setComma((k, result.coins[k].price_bid_btckrw).toFixed(2)) + '원</td>'; 
+              	    td += '<td>' +setComma((k, result.coins[k].price_bid_btc_total)) + ' 원</td>'; 
 				    td += '<td>' +(k, result.coins[k].premium) + ' %</td>';
 				    td += '</tr>';
 				    str += td; 
 					    
 					}
 					str +='</tbody>';
-					str +='</table>'; 
-					console.log(str);
+					str +='</table>';  
                   $('#result').html(str);
 
-                  document.title = setComma(upbit);
+                  str ='<table class="yellowTable">'; 
+                   str += '<thead>'; 
+                   str += '<tr>';
+                   str += '<th>코인명</th>';
+				   str += '<th>판매 최저가 비트</th>';
+				   str += '<th>판매 최저가 총액</th>';
+				   str += '<th>구매 최고가 KRW</th>';
+				   str += '<th>구매 최고가 총액</th>'; 
+				   str += '<th>프리미엄</th>';
+		           str += '</tr>'; 
+		           str += '</thead>'; 
+		           str += '<tbody>';  
+                  for(var k in result.coins2) {
+ 
+                  	var td ='';                  	 
+              	    td = '<tr>';  
+              	    td += '<td>' +(k, result.coins2[k].symbol) + '</td>';
+              	    td += '<td>' +setComma((k, result.coins2[k].price_ask_btc)) +' / '+ setComma((k, result.coins2[k].price_ask_btckrw).toFixed(2))+' 원</td>';
+              	    td += '<td>' +setComma((k, result.coins2[k].price_ask_btc_total )) + ' 원</td>'; 
+              	    td += '<td>' +setComma((k, result.coins2[k].price_bid_krw)) + ' 원</td>';  
+              	    td += '<td>' +setComma((k, result.coins2[k].price_bid_krw_total)) + ' 원</td>'; 
+				    td += '<td>' +(k, result.coins2[k].premium) + ' %</td>';
+				    td += '</tr>';
+				    str += td; 
+					    
+					}
+					str +='</tbody>';
+					str +='</table>'; 
+					 $('#result2').html(str);
+                  //document.title = setComma(upbit);
               }
           });
 	 }
@@ -71,6 +103,9 @@
 </head>
 <body onload='getPrice()'>  
 	<div id='result' style='display:inline;float:left;width:700px'>  
+	</div>
+	 
+	<div id='result2' style='display:inline;float:left;width:700px'>  
 	</div>
 </body>
 </html>
