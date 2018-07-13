@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>김치</title>
+
+	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+	<script src='http://code.jquery.com/jquery-latest.js'></script>	 
+	<script type="text/javascript">
+	 
+	  function getPrice(){
+	 	 $.ajax({
+              url: '/users',
+              dataType: 'json',
+              type: 'GET', 
+              contentType: 'application/json; charset=utf-8',
+              success: function(result) { 
+
+                   var upbit = '';
+                   var str ='<table class="blueTable">';
+                   str += '<thead>'; 
+                   str += '<tr>';
+                   str += '<th>코인명</th>';
+				   str += '<th>KRW</th>';
+				   str += '<th>USDT->KRW가격</th>';
+				   str += '<th>USDT</th>'; 
+				   str += '<th>프리미엄</th>';
+		           str += '</tr>'; 
+		           str += '</thead>'; 
+		           str += '<tbody>';  
+                  for(var k in result.coins) {
+ 
+                  	var td ='';                  	 
+              	    td = '<tr>';  
+              	    td += '<td>' +(k, result.coins[k].symbol) + '</td>';
+              	    td += '<td>' +setComma((k, result.coins[k].price_krw)) + ' 원</td>';
+              	    td += '<td>' +setComma((k, result.coins[k].price_krw_usd)) + ' 원</td>';
+              	    td += '<td>' +setComma((k, result.coins[k].price_usd)) + ' 달라</td>';  
+				    td += '<td>' +(k, result.coins[k].premium) + ' %</td>';
+				    td += '</tr>';
+				    str += td; 
+					    
+					}
+					str +='</tbody>';
+					str +='</table>'; 
+					console.log(str);
+                  $('#result').html(str);
+
+                  document.title = setComma(upbit);
+              }
+          });
+	 }
+
+
+	 function setComma (number) {
+	    // 정규표현식 : (+- 존재하거나 존재 안함, 숫자가 1개 이상), (숫자가 3개씩 반복)
+	    var reg = /(^[+-]?\d+)(\d{3})/;
+
+	    // 스트링변환
+	    number += '';
+	    while (reg.test(number)) {
+	        // replace 정규표현식으로 3자리씩 콤마 처리
+	        number = number.replace(reg,'$1'+','+'$2');
+	    }
+
+	    return number;
+	} 
+
+	</script>
+ 
+
+</head>
+<body onload='getPrice()'>  
+	<div id='result' style='display:inline;float:left;width:700px'>  
+	</div>
+</body>
+</html>
